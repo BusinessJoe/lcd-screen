@@ -57,13 +57,14 @@ void app_main(void)
 
     scan_addresses();
 
-    // Return home
-    send_byte(0x2, LCD_RS_LOW);
-    ets_delay_us(3000);
-
-    // Clear display
-    send_byte(0x1, LCD_RS_LOW);
-    ets_delay_us(3000);
+    return_home();
+    clear_display();
 
     send_string("Hello world");
+
+    for (int i = 0; i < 20 * 4; i++)
+    {
+        send_char('!');
+        vTaskDelay(100 / portTICK_PERIOD_MS);
+    }
 }

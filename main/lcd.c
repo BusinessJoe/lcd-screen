@@ -2,6 +2,10 @@
 #include "driver/i2c.h"
 #include "rom/ets_sys.h"
 
+/* Private functions */
+void _send_nibble(uint8_t byte, LcdRs rs);
+void _pulse_enable(uint8_t data);
+
 void _pulse_enable(uint8_t data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
@@ -42,6 +46,18 @@ void send_byte(uint8_t byte, LcdRs rs)
 {
     _send_nibble(byte & 0xf0, rs);
     _send_nibble((byte << 4) & 0xf0, rs);
+}
+
+void clear_display()
+{
+    send_byte(0x1, LCD_RS_LOW);
+    ets_delay_us(3000);
+}
+
+void return_home()
+{
+    send_byte(0x2, LCD_RS_LOW);
+    ets_delay_us(3000);
 }
 
 void send_char(char c)

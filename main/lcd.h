@@ -15,8 +15,13 @@ typedef enum LcdRs
     LCD_RS_HIGH = 1,
 } LcdRs;
 
-void send_byte(uint8_t byte, LcdRs rs);
+/* Commands */
+void clear_display();
+void return_home();
+
+/* Data */
 void send_char(char c);
 void send_string(char *s);
-void _send_nibble(uint8_t byte, LcdRs rs);
-void _pulse_enable(uint8_t data);
+
+// Set RS and send a single byte
+void send_byte(uint8_t byte, LcdRs rs);
