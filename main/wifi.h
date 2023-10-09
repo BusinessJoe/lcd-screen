@@ -21,8 +21,6 @@
 
 #include "secrets.h"
 
-#define EXAMPLE_ESP_WIFI_SSID SECRET_SSID
-#define EXAMPLE_ESP_WIFI_PASS SECRET_PASSWORD
 #define EXAMPLE_ESP_MAXIMUM_RETRY 5
 
 #define CONFIG_ESP_WPA3_SAE_PWE_HUNT_AND_PECK 1
@@ -109,8 +107,8 @@ void wifi_init_sta(void)
 
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = EXAMPLE_ESP_WIFI_SSID,
-            .password = EXAMPLE_ESP_WIFI_PASS,
+            .ssid = SECRET_SSID,
+            .password = SECRET_PASSWORD,
             /* Authmode threshold resets to WPA2 as default if password matches WPA2 standards (pasword len => 8).
              * If you want to connect the device to deprecated WEP/WPA networks, Please set the threshold value
              * to WIFI_AUTH_WEP/WIFI_AUTH_WPA_PSK and set the password with length and format matching to
@@ -140,12 +138,12 @@ void wifi_init_sta(void)
     if (bits & WIFI_CONNECTED_BIT)
     {
         ESP_LOGI(TAG, "connected to ap SSID:%s password:%s",
-                 EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+                 SECRET_SSID, SECRET_PASSWORD);
     }
     else if (bits & WIFI_FAIL_BIT)
     {
         ESP_LOGI(TAG, "Failed to connect to SSID:%s, password:%s",
-                 EXAMPLE_ESP_WIFI_SSID, EXAMPLE_ESP_WIFI_PASS);
+                 SECRET_SSID, SECRET_PASSWORD);
     }
     else
     {

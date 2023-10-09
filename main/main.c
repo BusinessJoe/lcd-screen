@@ -115,6 +115,16 @@ void app_main()
 
     start_webserver(on_message);
 
+    // Disable cursor
+    send_byte(0b00001100, LCD_RS_LOW);
+
     clear_text_memory();
+
+    const char init_message[] = "Initialized!";
+    for (int i = 0; init_message[i] != '\0'; i++)
+    {
+        text[i] = init_message[i];
+    }
+
     draw_text();
 }
