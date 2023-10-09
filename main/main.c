@@ -125,6 +125,8 @@ void app_main()
     {
         text[i] = init_message[i];
     }
-
     draw_text();
+
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    clear_display();
 }
