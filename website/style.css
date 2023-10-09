@@ -1,0 +1,43 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.lcd {
+    background-color: blue;
+    color: white;
+    width: 500px;
+    font-family: monospace;
+    font-size: 40px;
+    border: 10px solid black;
+    border-radius: 5px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+}
+
+.box {
+    text-align: center;
+}
+
+.selected {
+    background-color: white;
+    color: blue;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.submit-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

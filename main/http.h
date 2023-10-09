@@ -5,12 +5,11 @@
 
 typedef void (*on_message_t)(char *message);
 
-/* Our URI handler function to be called during GET /uri request */
 esp_err_t
-get_handler(httpd_req_t *req)
+ping_get_handler(httpd_req_t *req)
 {
     /* Send a simple response */
-    const char resp[] = "URI GET Response";
+    const char resp[] = "pong";
     httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
 }
@@ -46,19 +45,21 @@ esp_err_t message_post_handler(httpd_req_t *req)
 
     on_message(content);
 
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
     const char resp[] = "";
     httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
 
     return ESP_OK;
 }
 
-/* URI handler structure for GET /uri */
-httpd_uri_t uri_get = {
-    .uri = "/uri",
+/* URI handler structure for GET /ping */
+httpd_uri_t ping_get = {
+    .uri = "/ping",
     .method = HTTP_GET,
-    .handler = get_handler,
+    .handler = ping_get_handler,
     .user_ctx = NULL};
 
+/* URI handler structure for POST /message */
 httpd_uri_t message_post = {
     .uri = "/message",
     .method = HTTP_POST,
@@ -79,7 +80,7 @@ httpd_handle_t start_webserver(on_message_t on_message)
     if (httpd_start(&server, &config) == ESP_OK)
     {
         /* Register URI handlers */
-        httpd_register_uri_handler(server, &uri_get);
+        httpd_register_uri_handler(server, &ping_get);
         message_post.user_ctx = on_message;
         httpd_register_uri_handler(server, &message_post);
     }
