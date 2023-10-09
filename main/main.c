@@ -1,13 +1,16 @@
+#include "esp_wifi.h"
 #include "driver/i2c.h"
 #include "rom/ets_sys.h"
 #include "lcd.h"
+#include "wifi.h"
+#include "http.h"
 
 #define I2C_SDA_GPIO 21
 #define I2C_SCL_GPIO 22
 #define I2C_FREQ_HZ 1000000
 #define I2C_PORT I2C_NUM_0
 
-void scan_addresses(void)
+void scan_addresses()
 {
     uint8_t device_count = 0;
     uint8_t found_address;
@@ -35,7 +38,7 @@ void scan_addresses(void)
     assert(found_address == LCD_ADDRESS);
 }
 
-void init_i2c(void)
+void init_i2c()
 {
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
@@ -51,7 +54,7 @@ void init_i2c(void)
     ESP_ERROR_CHECK(i2c_driver_install(I2C_PORT, conf.mode, 0, 0, 0));
 }
 
-void app_main(void)
+void app_main()
 {
     init_i2c();
 
@@ -59,6 +62,19 @@ void app_main(void)
 
     return_home();
     clear_display();
+
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    wifi_init_sta();
+
+    start_webserver();
 
     send_string("Hello world");
 

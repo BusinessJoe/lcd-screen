@@ -4,6 +4,17 @@
     "idf.adapterTargetName": "esp32",
     "files.associations": {
         "*.embeddedhtml": "html",
-        "cstddef": "c"
+        "cstddef": "c",
+        "esp_wifi.h": "c",
+        "esp_wifi_types.h": "c",
+        "esp_wifi_types_private.h": "c",
+        "queue.h": "c",
+        "event_groups.h": "c",
+        "err.h": "c",
+        "opt.h": "c",
+        "debug.h": "c",
+        "arch.h": "c",
+        "cc.h": "c",
+        "time.h": "c"
     }
 }
