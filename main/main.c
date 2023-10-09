@@ -10,6 +10,9 @@
 #define I2C_FREQ_HZ 1000000
 #define I2C_PORT I2C_NUM_0
 
+// The screen is 4 rows by 20 columns; 80 characters
+static uint8_t text[80];
+
 void scan_addresses()
 {
     uint8_t device_count = 0;
@@ -54,15 +57,51 @@ void init_i2c()
     ESP_ERROR_CHECK(i2c_driver_install(I2C_PORT, conf.mode, 0, 0, 0));
 }
 
+void clear_text_memory()
+{
+    for (int i = 0; i < 80; i++)
+    {
+        text[i] = ' ';
+    }
+}
+
+void draw_text()
+{
+    return_home();
+    clear_display();
+
+    // The lines are drawn in order 1, 3, 2, 4.
+    for (int i = 0; i < 20; i++)
+    {
+        send_char(text[i]);
+    }
+    for (int i = 0; i < 20; i++)
+    {
+        send_char(text[i + 40]);
+    }
+    for (int i = 0; i < 20; i++)
+    {
+        send_char(text[i + 20]);
+    }
+    for (int i = 0; i < 20; i++)
+    {
+        send_char(text[i + 60]);
+    }
+}
+
+void on_message(char *message)
+{
+    memcpy(text, message, 80);
+    draw_text();
+}
+
 void app_main()
 {
     init_i2c();
 
     scan_addresses();
 
-    return_home();
-    clear_display();
-
+    // TODO: what does this section do?
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
@@ -74,13 +113,8 @@ void app_main()
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
 
-    start_webserver();
+    start_webserver(on_message);
 
-    send_string("Hello world");
-
-    for (int i = 0; i < 20 * 4; i++)
-    {
-        send_char('!');
-        vTaskDelay(100 / portTICK_PERIOD_MS);
-    }
+    clear_text_memory();
+    draw_text();
 }
