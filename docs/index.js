@@ -50,6 +50,11 @@ function initLcd() {
         event.preventDefault();
         submit();
     });
+
+    const initialText = "Type a message here";
+    for (let i = 0; i < initialText.length; i++) {
+        text[i] = initialText[i];
+    }
     drawText();
 }
 
